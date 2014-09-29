@@ -19,26 +19,26 @@ def LocBeamInt(x, z): # function works out beam intensity as a function of dista
     I = 0.5*((c2-c1)**2+(s2-s1)**2)    
     return I;
 
-d = 1.0             #slitwidth mm
-lam = 2.66e-4       #wavelength mm
-
-xposlim = 10 #number of x points
-xpos = np.linspace(-d,d,xposlim)
-
-zposlim = 10 #number of z points
-zpos = np.linspace(0,10,zposlim)
-
-LocalIntensity = LocBeamInt(xpos,zpos)
-
+d = 1.0 #slitwidth mm
+lam = 2.66e-4 #wavelength mm
+xposlim = 10000 #number of x points
+xpos = np.linspace(-0.6*d,0.6*d,xposlim)
+zposlim = 150 #number of z points
+zpos = np.linspace(1,10,zposlim)
+#LocBeamInt(xpos,zpos)
 # plot limits
 x_min = np.min(xpos)
 x_max = np.max(xpos)
 z_min = np.min(zpos)
 z_max = np.max(zpos)
 
+Intprof = np.empty([xposlim, zposlim])
+for x in range(0,zposlim,1):
+    Intprof[:,x] = LocBeamInt(xpos,zpos[x]).real
+
 fig3 = plt.figure(1)
-plt.imshow(LocalIntensity, cmap=matplotlib.cm.gray, interpolation='nearest', aspect='auto', origin='lower', extent = [ (z_min), (z_max), x_min, x_max,]) 
+plt.imshow(Intprof, cmap=matplotlib.cm.gray, interpolation='nearest', aspect='auto', origin='lower', extent = [ (z_min), (z_max), x_min, x_max,])
 plt.title("Beam intensity")
-plt.xlabel('Distance along slit (mm)')
-plt.ylabel('Distance from slit (mm)')
+plt.xlabel('Distance from slit (mm)')
+plt.ylabel('Distance along slit (mm)')
 plt.show()
